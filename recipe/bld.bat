@@ -1,4 +1,8 @@
 cmake -S . -G Ninja -B build ^
+    -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_VERBOSE_MAKEFILE=ON ^
+    -Wno-dev ^
+    -DBUILD_TESTING=OFF ^
 	-DBUILD_SHARED_LIBS=ON ^
 	-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ^
 	%CMAKE_ARGS% || goto :error
