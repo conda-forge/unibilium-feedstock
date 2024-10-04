@@ -1,5 +1,5 @@
 {% set name = "unibilium" %}
-{% set version = "2.1.1" %}
+{% set version = "2.1.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,31 +7,42 @@ package:
 
 source:
   url: https://github.com/neovim/{{ name }}/archive/v{{ version }}.tar.gz
-  sha256: 6f0ee21c8605340cfbb458cbd195b4d074e6d16dd0c0e12f2627ca773f3cabf1
+  sha256: 370ecb07fbbc20d91d1b350c55f1c806b06bf86797e164081ccc977fc9b3af7a
 
 build:
-  number: 1
+  number: 0
+  build:
+  run_exports:
+    - {{ pin_subpackage('unibilium', max_pin='x.x') }}
 
 requirements:
   build:
     - {{ compiler('c') }}
-    - cmake  # [win]
-    - make  # [unix]
-    - ninja  # [win]
+    - cmake >= 3.10 # [win]
+    - make          # [unix]
+    - ninja         # [win]
   host:
-    - libtool  # [unix]
+    - libtool       # [unix]
 
 test:
   commands:
-    - test -f $PREFIX/lib/libunibilium${SHLIB_EXT}  # [unix]
+    - test -f ${PREFIX}/include/libunibilium.h                       # [unix]
+    - test -f ${PREFIX}/lib/libunibilium${SHLIB_EXT}                 # [not win]
+    - test -f ${PREFIX}/lib/libunibilium.*.dylib                     # [osx]
+    - test -f ${PREFIX}/lib/libunibilium.so.*                        # [linux]
+    - if not exist %PREFIX%\Library\bin\unibilium-*.dll exit /b 1    # [win]
+    - if not exist %PREFIX%\Library\lib\unibilium.dll.lib exit /b 1  # [win]
+    - if not exist %PREFIX%\Library\lib\unibilium.lib exit /b 1      # [win]
+    - if not exist %PREFIX%\Library\include\libunibilium.h exit /b1  # [win]
 
 about:
-  home: https://www.vim.org/
+  home: https://github.com/neovim/{{ name }}
+  dev_url: https://github.com/neovim/{{ name }}
   license: LGPL-3.0-or-later
   license_file: LICENSE
   summary: A terminfo parsing library
-  dev_url: https://github.com/neovim/{{ name }}
 
 extra:
   recipe-maintainers:
+    - anjos
     - danielnachun
