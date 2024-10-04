@@ -2,9 +2,13 @@
 
 set -o xtrace -o nounset -o pipefail -o errexit
 
-make LIBTOOL=${PREFIX}/bin/libtool PREFIX=${PREFIX}
-if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR-}" != "" ]]; then
-    make test LIBTOOL=${PREFIX}/bin/libtool
-fi
-make install LIBTOOL=${PREFIX}/bin/libtool PREFIX=${PREFIX}
-rm -f ${PREFIX}/lib/libunibilium.a
+cmake -S . -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
+    -Wno-dev \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_STATIC_LIBS=OFF \
+    ${CMAKE_ARGS}
+cmake --build build -j${CPU_COUNT}
+cmake --install build

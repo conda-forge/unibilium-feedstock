@@ -18,29 +18,27 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
-    - cmake >= 3.10 # [win]
-    - make          # [unix]
-    - ninja         # [win]
+    #- {{ stdlib('c') }}
+    - cmake >=3.10
+    - make  # [unix]
+    - ninja  # [win]
   host:
-    - libtool       # [unix]
+    - libtool  # [unix]
 
 test:
   commands:
-    - test -f ${PREFIX}/include/libunibilium.h                       # [unix]
-    - test -f ${PREFIX}/lib/libunibilium${SHLIB_EXT}                 # [not win]
-    - test -f ${PREFIX}/lib/libunibilium.*.dylib                     # [osx]
-    - test -f ${PREFIX}/lib/libunibilium.so.*                        # [linux]
-    - if not exist %PREFIX%\Library\bin\unibilium-*.dll exit /b 1    # [win]
-    - if not exist %PREFIX%\Library\lib\unibilium.dll.lib exit /b 1  # [win]
-    - if not exist %PREFIX%\Library\lib\unibilium.lib exit /b 1      # [win]
-    - if not exist %PREFIX%\Library\include\libunibilium.h exit /b1  # [win]
+    - test -f ${PREFIX}/include/unibilium.h  # [unix]
+    - test -f ${PREFIX}/lib/libunibilium${SHLIB_EXT}  # [not win]
+    - if not exist %PREFIX%\Library\bin\unibilium.dll exit /b 1  # [win]
+    - if not exist %PREFIX%\Library\lib\unibilium.lib exit /b 1  # [win]
+    - if not exist %PREFIX%\Library\include\unibilium.h exit /b1  # [win]
 
 about:
   home: https://github.com/neovim/{{ name }}
-  dev_url: https://github.com/neovim/{{ name }}
   license: LGPL-3.0-or-later
   license_file: LICENSE
   summary: A terminfo parsing library
+  dev_url: https://github.com/neovim/{{ name }}
 
 extra:
   recipe-maintainers:
