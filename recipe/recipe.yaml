@@ -1,0 +1,52 @@
+context:
+  version: 2.1.2
+
+package:
+  name: unibilium
+  version: ${{ version }}
+
+source:
+  url: https://github.com/neovim/unibilium/archive/v${{ version }}.tar.gz
+  sha256: 370ecb07fbbc20d91d1b350c55f1c806b06bf86797e164081ccc977fc9b3af7a
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib('c') }}
+    - cmake >=3.10
+    - if: not win
+      then: make
+    - if: win
+      then: ninja
+  host:
+    - if: unix
+      then: libtool
+  run_exports:
+    - ${{ pin_subpackage('unibilium', upper_bound='x.x') }}
+
+tests:
+  - script:
+      - if: not win
+        then: |
+          test -f ${PREFIX}/include/unibilium.h
+          test -f ${PREFIX}/lib/libunibilium${SHLIB_EXT}
+      - if: win
+        then: |
+          if not exist %PREFIX%\Library\bin\unibilium.dll exit /b 1
+          if not exist %PREFIX%\Library\lib\unibilium.lib exit /b 1
+          if not exist %PREFIX%\Library\include\unibilium.h exit /b 1
+
+about:
+  license: LGPL-3.0-or-later
+  license_file: LICENSE
+  summary: A terminfo parsing library
+  homepage: https://github.com/neovim/unibilium
+  repository: https://github.com/neovim/unibilium
+
+extra:
+  recipe-maintainers:
+    - anjos
+    - danielnachun
